@@ -58,6 +58,8 @@ jobs:
       ${{ if eq(variables['System.TeamProject'], 'internal') }}:
         name: dotnet-internal-temp
   variables:
+    - name: _InternalBuildArgs
+      value: ''
     - name: KOREBUILD_KEEPGLOBALJSON
       value: 1
     - name: AgentOsName
@@ -72,15 +74,14 @@ jobs:
       value: ${{ parameters.configuration }}
     - name: VSTS_OVERWRITE_TEMP
       value: false # Workaround for https://github.com/dotnet/core-eng/issues/2812
-    - ${{ if or(ne(parameters.codeSign, 'true'), ne(variables['System.TeamProject'], 'internal')) }}:
-      - name: _SignType
-        value: 'test'
     - ${{ if and(eq(parameters.codeSign, 'true'), eq(variables['System.TeamProject'], 'internal')) }}:
       - name: TeamName
         value: AspNetCore
       - name: _SignType
         value: real
       - group: DotNet-Blob-Feed
+      - name: _InternalBuildArgs
+        value: /p:DotNetSignType=$(_SignType)
   steps:
   - checkout: self
     clean: true
@@ -94,11 +95,11 @@ jobs:
         feedSource: https://dnceng.pkgs.visualstudio.com/_packaging/MicroBuildToolset/nuget/v3/index.json
   - ${{ if eq(parameters.agentOs, 'Windows') }}:
     - script: eng\common\cibuild.cmd
+        -warnaserror $False
         -configuration $(BuildConfiguration)
         -prepareMachine
-        -warnaserror $False
         /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-        /p:DotNetSignType=$(_SignType)
+        $(_InternalBuildArgs)
       displayName: Run cibuild.cmd
   - ${{ if ne(parameters.agentOs, 'Windows') }}:
     - script: eng/common/cibuild.sh
@@ -106,7 +107,6 @@ jobs:
         --configuration $(BuildConfiguration)
         --prepareMachine
         /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-        /p:DotNetSignType=$(_SignType)
       displayName: Run cibuild.sh
   - task: PublishTestResults@2
     displayName: Publish xUnit Test Results
