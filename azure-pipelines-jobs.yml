@@ -68,6 +68,7 @@ jobs:
       - checkout: self
         clean: true
       - script: eng\common\cibuild.cmd
+          -warnaserror $False
           -configuration $(_BuildConfig)
           -prepareMachine
           $(_BuildArgs)
@@ -92,6 +93,7 @@ jobs:
       - checkout: self
         clean: true
       - script: eng/common/cibuild.sh
+          --warnAsError false
           --configuration $(_BuildConfig)
           --prepareMachine
         displayName: Build
@@ -115,6 +117,7 @@ jobs:
       - checkout: self
         clean: true
       - script: eng/common/cibuild.sh
+          --warnAsError false
           --configuration $(_BuildConfig)
           --prepareMachine
         displayName: Build
