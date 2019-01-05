@@ -75,7 +75,7 @@ jobs:
         displayName: Build and Publish
       - task: PublishBuildArtifacts@1
         displayName: Upload package artifacts
-        condition: eq(variables['system.pullrequest.isfork'], false)
+        condition: and(eq(variables['system.pullrequest.isfork'], false), eq(variables['System.TeamProject'], 'internal'))
         inputs:
           pathtoPublish: artifacts/
           ${{ if eq(parameters.artifacts.name, '') }}:
@@ -142,4 +142,4 @@ jobs:
       steps:
       - checkout: self
         clean: true
-      - script: dotnet msbuild eng/repo.targets /t:TagCiBuilds $(_BuildArgs)
+      - script: dotnet msbuild eng/repo.targets /t:TagCiBuilds /p:IsFinalBuild=$(IsFinalBuild)
