@@ -135,6 +135,10 @@ jobs:
 
     - job: Set_Tags
       displayName: 'Set Tags'
+      dependsOn:
+      - OSX_10_13
+      - Ubuntu_16_04
+      - Windows
       steps:
       - checkout: self
         clean: true
