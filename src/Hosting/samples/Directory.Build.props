@@ -3,6 +3,5 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-    <IsShipping>false</IsShipping>
   </PropertyGroup>
 </Project>
