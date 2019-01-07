@@ -73,6 +73,7 @@ jobs:
           -prepareMachine
           $(_BuildArgs)
         displayName: Build and Publish
+      - script: dotnet msbuild eng/repo.targets /t:TagCiBuilds /p:IsFinalBuild=$(IsFinalBuild)
       - task: PublishBuildArtifacts@1
         displayName: Upload package artifacts
         condition: and(eq(variables['system.pullrequest.isfork'], false), eq(variables['System.TeamProject'], 'internal'))
@@ -132,14 +133,3 @@ jobs:
           --configuration $(_BuildConfig)
           --prepareMachine
         displayName: Build
-
-    - job: Set_Tags
-      displayName: 'Set Tags'
-      dependsOn:
-      - OSX_10_13
-      - Ubuntu_16_04
-      - Windows
-      steps:
-      - checkout: self
-        clean: true
-      - script: dotnet msbuild eng/repo.targets /t:TagCiBuilds /p:IsFinalBuild=$(IsFinalBuild)
