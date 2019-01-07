@@ -73,7 +73,7 @@ jobs:
           -prepareMachine
           $(_BuildArgs)
         displayName: Build and Publish
-      - powershell: eng\common\msbuild.ps1 eng/repo.targets '/p:IsFinalBuild=$(IsFinalBuild)' '/p:CI=true'
+      - powershell: eng\common\msbuild.ps1 -verbosity n eng/repo.targets '/p:IsFinalBuild=$(IsFinalBuild)' '/p:CI=true'
         displayName: Set CI Tags
       - task: PublishBuildArtifacts@1
         displayName: Upload package artifacts
