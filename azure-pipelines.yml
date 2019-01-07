@@ -77,7 +77,7 @@ jobs:
         displayName: Set CI Tags
       - task: PublishBuildArtifacts@1
         displayName: Upload package artifacts
-        condition: and(eq(variables['system.pullrequest.isfork'], false), eq(variables['System.TeamProject'], 'internal'))
+        condition: eq(variables['system.pullrequest.isfork'], false)
         inputs:
           pathtoPublish: artifacts/
           ${{ if eq(parameters.artifacts.name, '') }}:
