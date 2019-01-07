@@ -73,7 +73,8 @@ jobs:
           -prepareMachine
           $(_BuildArgs)
         displayName: Build and Publish
-      - script: dotnet msbuild eng/repo.targets /t:TagCiBuilds /p:IsFinalBuild=$(IsFinalBuild)
+      - powershell: eng\common\msbuild.ps1 eng/repo.targets '/p:IsFinalBuild=$(IsFinalBuild)' '/p:CI=true'
+        displayName: Set CI Tags
       - task: PublishBuildArtifacts@1
         displayName: Upload package artifacts
         condition: and(eq(variables['system.pullrequest.isfork'], false), eq(variables['System.TeamProject'], 'internal'))
